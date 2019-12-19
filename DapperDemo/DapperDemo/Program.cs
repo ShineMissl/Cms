@@ -77,8 +77,8 @@ namespace DapperDemo
             };
             using (var conn = new SqlConnection(connectString))
             {
-                string sql_insert = @"DELETE FROM [Content] WHERE   (id = @id)";
-                var result = conn.Execute(sql_insert, content);
+                string sql_delete = @"DELETE FROM [Content] WHERE   (id = @id)";
+                var result = conn.Execute(sql_delete, content);
                 Console.WriteLine($"test_del：删除了{result}条数据！");
             }
         }
@@ -103,8 +103,8 @@ namespace DapperDemo
 
             using (var conn = new SqlConnection(connectString))
             {
-                string sql_insert = @"DELETE FROM [Content] WHERE   (id = @id)";
-                var result = conn.Execute(sql_insert, contents);
+                string sql_delete = @"DELETE FROM [Content] WHERE   (id = @id)";
+                var result = conn.Execute(sql_delete, contents);
                 Console.WriteLine($"test_mult_del：删除了{result}条数据！");
             }
         }
@@ -123,10 +123,10 @@ namespace DapperDemo
             };
             using (var conn = new SqlConnection(connectString))
             {
-                string sql_insert = @"UPDATE  [Content]
+                string sql_update = @"UPDATE  [Content]
                     SET         title = @title, [content] = @content, modify_time = GETDATE()
                     WHERE   (id = @id)";
-                var result = conn.Execute(sql_insert, content);
+                var result = conn.Execute(sql_update, content);
                 Console.WriteLine($"test_update：修改了{result}条数据！");
             }
         }
@@ -155,10 +155,10 @@ namespace DapperDemo
 
             using (var conn = new SqlConnection(connectString))
             {
-                string sql_insert = @"UPDATE  [Content]
+                string sql_update = @"UPDATE  [Content]
                     SET         title = @title, [content] = @content, modify_time = GETDATE()
                     WHERE   (id = @id)";
-                var result = conn.Execute(sql_insert, contents);
+                var result = conn.Execute(sql_update, contents);
                 Console.WriteLine($"test_mult_update：修改了{result}条数据！");
             }
         }
