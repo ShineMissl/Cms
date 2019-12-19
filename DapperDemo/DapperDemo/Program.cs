@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using Dapper;
 
 namespace DapperDemo
@@ -17,8 +18,11 @@ namespace DapperDemo
             //insertMutilData();
             //test_del();
             //test_mult_del();
-            test_update();
-            test_mult_update();
+            //test_update();
+            //test_mult_update();
+            test_select_one();
+            test_select_list();
+            test_select_content_with_comment();
             Console.ReadLine();
         }
 
@@ -160,6 +164,48 @@ namespace DapperDemo
                     WHERE   (id = @id)";
                 var result = conn.Execute(sql_update, contents);
                 Console.WriteLine($"test_mult_update：修改了{result}条数据！");
+            }
+        }
+
+        /// <summary>
+        /// 查询单条指定的数据
+        /// </summary>
+        static void test_select_one()
+        {
+            using (var conn = new SqlConnection(connectString))
+            {
+                string sql_select = @"select * from [dbo].[content] where id=@id";
+                var result = conn.QueryFirstOrDefault<Content>(sql_select, new { id = 5 });
+                Console.WriteLine($"test_select_one：查到的数据为：{result}");
+            }
+        }
+
+        /// <summary>
+        /// 查询多条指定的数据
+        /// </summary>
+        static void test_select_list()
+        {
+            using (var conn = new SqlConnection(connectString))
+            {
+                string sql_select = @"select * from [dbo].[content] where id in @ids";
+                var result = conn.Query<Content>(sql_select, new { ids = new int[] { 6, 7 } });
+                Console.WriteLine($"test_select_one：查到的数据为：{result}");
+            }
+        }
+
+        static void test_select_content_with_comment()
+        {
+            using (var conn = new SqlConnection(connectString))
+            {
+                string sql_insert = @"select * from content where id=@id;
+                    select * from comment where content_id=@id;";
+                using (var result = conn.QueryMultiple(sql_insert, new { id = 5 }))
+                {
+                    var content = result.ReadFirstOrDefault<ContentWithComment>();
+                    content.comments = result.Read<Comment>();
+                    Console.WriteLine($"test_select_content_with_comment:内容5的评论数量{content.comments.Count()}");
+                }
+
             }
         }
     }
